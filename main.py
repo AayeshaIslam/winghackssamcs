@@ -1,16 +1,28 @@
-# This is a sample Python script.
-
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import pytesseract
+from pdf2image import convert_from_path
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+pdf_path = "testrudeimage.pdf"
+pytesseract.pytesseract.tesseract_cmd = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
+def extract_text_ocr(pdf_path):
+    """
+    Extracts text from an image-based (scanned) PDF using OCR.
+    """
+    text = ""
+    images = convert_from_path(pdf_path)
+    for image in images:
+        text += pytesseract.image_to_string(image, lang="eng") + "\n"
+
+    return text.strip()
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+extracted_text = extract_text_ocr(pdf_path)
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+
+print(extracted_text)
+
+
+with open("extracted_text.txt", "w", encoding="utf-8") as file:
+    file.write(extracted_text)
+
+print("\nExtracted text has been saved to 'extracted_text.txt'")
